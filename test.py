@@ -12,6 +12,10 @@ from slack_sdk.errors import SlackApiError
 logging.basicConfig(level=logging.DEBUG)
 from slack_sdk import WebClient
 
+print("GITHUB_TOKEN is loaded:", bool(os.environ.get('GITHUB_TOKEN')))
+print("SLACK_TOKEN is loaded:", bool(os.environ.get('SLACK_TOKEN')))
+print("OPENAI_KEY is loaded:", bool(os.environ.get('OPENAI_KEY')))
+
 #get token
 client = WebClient(token=os.environ.get('TOKEN'))
 
