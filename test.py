@@ -42,6 +42,7 @@ class GithubIssue(BaseModel):
     Description: str
 openaiclient = OpenAI(api_key=os.environ.get('openai_key'))
 try:
+    # noinspection PyUnboundLocalVariable
     response = openaiclient.beta.chat.completions.parse(model="gpt-4o-mini-2024-07-18",messages=[
         {
             "role": "system",
@@ -54,13 +55,13 @@ try:
     ],response_format=GithubIssue,
     )
     message_issue = response.choices[0].message.parsed
-except APIError as e:
-  #Handle API error here, e.g. retry or log
-  print(f"OpenAI API returned an API Error: {e}")
-  pass
 except APIConnectionError as e:
   #Handle connection error here
   print(f"Failed to connect to OpenAI API: {e}")
+  pass
+except APIError as e:
+  #Handle API error here, e.g. retry or log
+  print(f"OpenAI API returned an API Error: {e}")
   pass
 except RateLimitError as e:
   #Handle rate limit error (we recommend using exponential backoff)
@@ -78,12 +79,13 @@ def make_issue(title,body,owner,repos,key):
         "title": title,
         "body": body
     }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        print("issue created!!",response.json()["html_url"])
+    GitResponse = requests.post(url, headers=headers, json=data)
+    if GitResponse.status_code == 201:
+        print("issue created!!", GitResponse.json()["html_url"])
     else:
-        print("Failed to create issue:", response.status_code,response.json)
+        print("Failed to create issue:", GitResponse.status_code, GitResponse.json)
 
 #calling github issuer
 #make_issue(title,description,owner,repos,key)
+# noinspection PyUnboundLocalVariable
 make_issue(message_issue.Title,message_issue.Description,"fawwaz1123","suggestor","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")
