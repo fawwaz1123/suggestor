@@ -1,0 +1,4 @@
+pydantic
+slack-sdk
+openai
+requests
