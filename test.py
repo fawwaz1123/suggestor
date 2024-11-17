@@ -12,6 +12,10 @@ from slack_sdk.errors import SlackApiError
 logging.basicConfig(level=logging.DEBUG)
 from slack_sdk import WebClient
 
+print("GITHUB_TOKEN is loaded:", bool(os.environ.get('GITHUB_TOKEN')))
+print("SLACK_TOKEN is loaded:", bool(os.environ.get('SLACK_TOKEN')))
+print("OPENAI_KEY is loaded:", bool(os.environ.get('OPENAI_KEY')))
+
 #get token
 client = WebClient(token=os.environ.get('TOKEN'))
 
@@ -20,7 +24,7 @@ client = WebClient(token=os.environ.get('TOKEN'))
 def make_issue(title,body,owner,repos):
     url = f"https://api.github.com/repos/{owner}/{repos}/issues"
     headers = {
-        "Authorization": f"Bearer {os.environ.get('Git_key')}",vim
+        "Authorization": f"Bearer {os.environ.get('Git_key')}",
         "Accept": "application/vnd.github.v3+json"
     }
     data = {
@@ -59,7 +63,6 @@ except SlackApiError as e:
 class GithubIssue(BaseModel):
     Title: str
     Description: str
-
 openaiclient = OpenAI(api_key=os.environ.get('openai_key'))
 try:
     # noinspection PyUnboundLocalVariable
@@ -75,8 +78,8 @@ try:
     ],response_format=GithubIssue,
     )
     message = response.choices[0].message.parsed
+    make_issue(message.Title,message.Description,"fawwaz1123","suggestor")
 
-    make_issue(message.Title, message.Description, "fawwaz1123", "suggestor")
 except APIConnectionError as e:
   #Handle connection error here
   print(f"Failed to connect to OpenAI API: {e}")
@@ -89,6 +92,23 @@ except RateLimitError as e:
   #Handle rate limit error (we recommend using exponential backoff)
   print(f"OpenAI API request exceeded rate limit: {e}")
   pass
+
+#define create github issue
+def make_issue(title,body,owner,repos):
+    url = f"https://api.github.com/repos/{owner}/{repos}/issues"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('Git_key')}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    data = {
+        "title": title,
+        "body": body
+    }
+    GitResponse = requests.post(url, headers=headers, json=data)
+    if GitResponse.status_code == 201:
+        print("issue created!!", GitResponse.json()["html_url"])
+    else:
+        print("Failed to create issue:", GitResponse.status_code, GitResponse.json)
 
 #calling github issuer
 #make_issue(title,description,owner,repos,key)
