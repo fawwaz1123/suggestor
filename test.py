@@ -69,10 +69,10 @@ except RateLimitError as e:
   pass
 
 #define create github issue
-def make_issue(title,body,owner,repos,key):
+def make_issue(title,body,owner,repos):
     url = f"https://api.github.com/repos/{owner}/{repos}/issues"
     headers = {
-        "Authorization": f"Bearer {key}",
+        "Authorization": f"Bearer {os.environ.get('Git_key')}",
         "Accept": "application/vnd.github.v3+json"
     }
     data = {
@@ -88,4 +88,4 @@ def make_issue(title,body,owner,repos,key):
 #calling github issuer
 #make_issue(title,description,owner,repos,key)
 # noinspection PyUnboundLocalVariable
-make_issue(message.Title,message.Description,"fawwaz1123","suggestor","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")
+make_issue(message.Title,message.Description,"fawwaz1123","suggestor")
