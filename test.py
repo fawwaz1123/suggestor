@@ -54,7 +54,7 @@ try:
         }
     ],response_format=GithubIssue,
     )
-    message_issue = response.choices[0].message.parsed
+    message = response.choices[0].message.parsed
 except APIConnectionError as e:
   #Handle connection error here
   print(f"Failed to connect to OpenAI API: {e}")
@@ -88,4 +88,4 @@ def make_issue(title,body,owner,repos,key):
 #calling github issuer
 #make_issue(title,description,owner,repos,key)
 # noinspection PyUnboundLocalVariable
-make_issue(message_issue.Title,message_issue.Description,"fawwaz1123","suggestor","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")
+make_issue(message.Title,message.Description,"fawwaz1123","suggestor","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")
