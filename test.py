@@ -14,7 +14,7 @@ from slack_sdk import WebClient
 
 print("GITHUB_TOKEN is loaded:", bool(os.environ.get('Git_key')))
 print("SLACK_TOKEN is loaded:", bool(os.environ.get('TOKEN')))
-print("OPENAI_KEY is loaded:", bool(os.environ.get('open_ai_key')))
+print("OPENAI_KEY is loaded:", bool(os.environ.get('openai_key')))
 
 #get token
 client = WebClient(token=os.environ.get('TOKEN'))
