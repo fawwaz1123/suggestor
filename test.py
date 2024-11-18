@@ -6,18 +6,9 @@ import datetime
 from openai import OpenAI, APIError,APIConnectionError,RateLimitError
 import requests
 import time
-
 from slack_sdk.errors import SlackApiError
-
 logging.basicConfig(level=logging.DEBUG)
 from slack_sdk import WebClient
-
-print("GITHUB_TOKEN is loaded:", bool(os.environ.get('GITHUB_TOKEN')))
-print("SLACK_TOKEN is loaded:", bool(os.environ.get('SLACK_TOKEN')))
-print("OPENAI_KEY is loaded:", bool(os.environ.get('OPENAI_KEY')))
-
-#get token
-client = WebClient(token=os.environ.get('TOKEN'))
 
 
 #define create github issue
@@ -37,7 +28,8 @@ def make_issue(title,body,owner,repos):
     else:
         print("Failed to create issue:", GitResponse.status_code, GitResponse.json)
 
-
+#get token
+client = WebClient(token=os.environ.get('TOKEN'))
 #get conversation
 current_date = time.mktime(datetime.datetime.now().timetuple())
 oldest_date = time.mktime((datetime.datetime.now()-datetime.timedelta(days=7)).timetuple())
@@ -93,23 +85,5 @@ except RateLimitError as e:
   print(f"OpenAI API request exceeded rate limit: {e}")
   pass
 
-#define create github issue
-def make_issue(title,body,owner,repos):
-    url = f"https://api.github.com/repos/{owner}/{repos}/issues"
-    headers = {
-        "Authorization": f"Bearer {os.environ.get('Git_key')}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    data = {
-        "title": title,
-        "body": body
-    }
-    GitResponse = requests.post(url, headers=headers, json=data)
-    if GitResponse.status_code == 201:
-        print("issue created!!", GitResponse.json()["html_url"])
-    else:
-        print("Failed to create issue:", GitResponse.status_code, GitResponse.json)
 
-#calling github issuer
-#make_issue(title,description,owner,repos,key)
-# noinspection PyUnboundLocalVariable
+
