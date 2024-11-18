@@ -14,7 +14,7 @@ from slack_sdk import WebClient
 
 #get token
 client = WebClient(token=os.environ.get('TOKEN'))
-
+print(os.environ.get('Git_key'))
 
 #define create github issue
 def make_issue(title,body,owner,repos):
@@ -77,6 +77,7 @@ try:
     )
     message = response.choices[0].message.parsed
     make_issue(message.Title,message.Description,"fawwaz1123","suggestor")
+    
 
 except APIConnectionError as e:
   #Handle connection error here
