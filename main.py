@@ -55,22 +55,6 @@ try:
 except SlackApiError as e:
     assert e.response["error"]
 
-#define create github issue
-def make_issue(title,body,owner,repos):
-    url = f"https://api.github.com/repos/{owner}/{repos}/issues"
-    headers = {
-        "Authorization": f"Bearer {os.environ.get('Git_key')}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-    data = {
-        "title": title,
-        "body": body
-    }
-    GitResponse = requests.post(url, headers=headers, json=data)
-    if GitResponse.status_code == 201:
-        print("issue created!!", GitResponse.json()["html_url"])
-    else:
-        print("Failed to create issue:", GitResponse.status_code, GitResponse.json)
 
 
 #sending to LLM
