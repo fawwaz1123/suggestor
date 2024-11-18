@@ -31,4 +31,4 @@ jobs:
         Git_key: ${{ secrets.GIT_KEY }}
         
       run: |
-        python test.py
+        python main.py
